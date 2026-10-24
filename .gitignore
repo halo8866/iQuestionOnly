@@ -1,0 +1,53 @@
+# ===== Gradle / 构建产物 =====
+.gradle/
+build/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# ===== Android Studio / IDE =====
+.idea/
+*.iml
+.local/
+.trae/
+local.properties
+
+# ===== 编译文件 =====
+*.class
+*.jar
+# 保留 Gradle Wrapper（官方推荐入库）
+!apk_android/gradle/wrapper/gradle-wrapper.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# ===== 日志 / 崩溃报告 =====
+*.log
+hs_err_pid*
+replay_pid*
+
+# ===== Kotlin 编译器缓存 =====
+.kotlin/
+
+# ===== Android 签名密钥与签名配置（禁止入库）=====
+*.jks
+*.keystore
+keystore.properties
+*.p12
+*.mobileprovision
+*.cer
+*.certSigningRequest
+
+# ===== IDE 个人配置 =====
+.vscode/
+
+# ===== macOS / Xcode =====
+.DS_Store
+xcuserdata/
+*.xcuserstate
+DerivedData/
+ipa_ios/iQuestion.xcodeproj/

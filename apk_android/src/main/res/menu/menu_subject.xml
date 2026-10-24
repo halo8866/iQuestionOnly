@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_subject_exam"
+        android:title="@string/menu_subject_exam"
+        android:icon="@drawable/ic_exam_paper"
+        app:showAsAction="ifRoom" />
+</menu>

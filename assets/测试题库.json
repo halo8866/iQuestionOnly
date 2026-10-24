@@ -1,0 +1,766 @@
+{
+  "name": "综合测试题库（合并版）",
+  "description": "由 sample_questions.json、test_essay_bank.json、计算机应用基础题库.json 合并去重而成，涵盖计算机基础、计算机应用基础两个科目，包含单选、多选、判断、解答四种题型。",
+  "questions": [
+    {
+      "type": "single",
+      "subject": "计算机基础",
+      "chapter": "第一章 基础知识",
+      "question": "计算机中，1KB 等于多少字节？",
+      "options": [
+        "A. 1000 字节",
+        "B. 1024 字节",
+        "C. 512 字节",
+        "D. 2048 字节"
+      ],
+      "answer": "B",
+      "analysis": "在计算机中，1KB = 1024 字节，1MB = 1024KB，1GB = 1024MB。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机基础",
+      "chapter": "第一章 基础知识",
+      "question": "下列哪种语言属于编译型语言？",
+      "options": [
+        "A. Python",
+        "B. JavaScript",
+        "C. C++",
+        "D. PHP"
+      ],
+      "answer": "C",
+      "analysis": "C++ 是编译型语言，需要先编译成机器码再执行。Python、JavaScript、PHP 属于解释型语言。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机基础",
+      "chapter": "第一章 基础知识",
+      "question": "以下哪些属于面向对象的基本特征？（多选）",
+      "options": [
+        "A. 封装",
+        "B. 继承",
+        "C. 多态",
+        "D. 递归"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C"
+      ],
+      "analysis": "面向对象的三大基本特征是封装、继承和多态。递归是一种编程技巧，不属于面向对象特征。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机基础",
+      "chapter": "第一章 基础知识",
+      "question": "以下哪些是提高代码质量的有效手段？（多选）",
+      "options": [
+        "A. 编写单元测试",
+        "B. 代码评审（Code Review）",
+        "C. 重复复制粘贴代码",
+        "D. 遵循统一的命名规范"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "D"
+      ],
+      "analysis": "单元测试、代码评审、统一命名规范都能提升代码质量；重复复制粘贴会导致维护困难，属于不良实践。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机基础",
+      "chapter": "第一章 基础知识",
+      "question": "在 Git 中，执行 git push --force 覆盖远程分支是完全安全、无需谨慎的操作。",
+      "answer": "错误",
+      "analysis": "强制推送会覆盖远程历史，可能丢失他人提交，尤其在共享分支上非常危险，应谨慎使用。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "在操作系统中，进程和线程的主要区别是？",
+      "options": [
+        "A. 进程是资源分配的基本单位，线程是 CPU 调度的基本单位",
+        "B. 线程是资源分配的基本单位，进程是 CPU 调度的基本单位",
+        "C. 进程和线程没有区别",
+        "D. 进程比线程运行得更快"
+      ],
+      "answer": "A",
+      "analysis": "进程是资源分配的基本单位，线程是 CPU 调度的基本单位。一个进程可以包含多个线程，线程共享进程的资源。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "在 HTTP 状态码中，表示「请求的资源未找到」的是？",
+      "options": [
+        "A. 200",
+        "B. 301",
+        "C. 404",
+        "D. 500"
+      ],
+      "answer": "C",
+      "analysis": "200 表示成功；301 表示永久重定向；404 表示资源未找到；500 表示服务器内部错误。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "以下哪些属于 HTTP 请求方法？（多选）",
+      "options": [
+        "A. GET",
+        "B. POST",
+        "C. FETCH",
+        "D. DELETE"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "D"
+      ],
+      "analysis": "标准 HTTP 方法包括 GET、POST、PUT、PATCH、DELETE 等；FETCH 不是 HTTP 方法，而是浏览器提供的 API。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "HTTP 协议是无状态协议。",
+      "answer": "正确",
+      "analysis": "HTTP 协议是无状态的，服务器不会保存客户端的状态信息，通常通过 Cookie/Session 来维持状态。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "TCP 协议是面向连接的可靠传输协议。",
+      "answer": "正确",
+      "analysis": "TCP 是面向连接的、可靠的、基于字节流的传输层协议。UDP 是无连接的、不可靠的传输协议。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "HTTPS 在 HTTP 与 TCP 之间加入了 TLS/SSL 加密层，能有效防止传输内容被窃听和篡改。",
+      "answer": "正确",
+      "analysis": "HTTPS = HTTP + TLS/SSL，通过加密、证书身份验证和完整性校验保证通信安全。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "请简述什么是 RESTful API，以及它常用的 HTTP 方法有哪些。",
+      "answer": "RESTful API 是一种基于 HTTP 协议、以资源为中心的接口设计风格：每个资源通过 URI 标识，使用 HTTP 方法表达对资源的操作，通常返回 JSON 数据，且无状态。\n常用 HTTP 方法：GET（查询资源）、POST（新建资源）、PUT（整体更新资源）、PATCH（部分更新资源）、DELETE（删除资源）。",
+      "analysis": "作答时抓住三个要点：①以资源为中心、URI 标识；②用 HTTP 方法表达操作（GET/POST/PUT/DELETE 等）；③无状态、通常返回 JSON。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "请简述进程与线程的区别，并说明为什么多线程能提升程序的并发处理能力。",
+      "answer": "区别：\n1. 进程是操作系统资源分配的基本单位，拥有独立的地址空间、文件句柄等资源；线程是 CPU 调度的基本单位，依附于进程存在。\n2. 同一进程内的多个线程共享该进程的内存和资源，线程间切换开销远小于进程间切换。\n3. 进程间相互隔离，一个进程崩溃通常不影响其他进程；线程崩溃可能导致整个进程终止。\n\n多线程提升并发能力的原因：线程切换成本低、创建销毁快；多线程可在多核 CPU 上真正并行执行；在 I/O 等待（如网络、磁盘）时，一个线程阻塞不影响其他线程继续工作，从而提高资源利用率和吞吐量。",
+      "analysis": "评分要点：①答出资源分配 vs 调度单位的区别；②答出地址空间/资源共享的差异；③能说明线程切换开销小、多核并行、I/O 等待不阻塞整体这三点中的任意两点即可。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "什么是 SQL 注入？请说明其危害，并列举至少三种防范措施。",
+      "answer": "SQL 注入是指攻击者将恶意 SQL 片段拼接到应用的查询参数中，使后端执行非预期 SQL 语句的攻击方式。\n\n危害：可绕过登录认证、窃取或篡改数据库数据、删除表、甚至通过数据库提权控制服务器。\n\n防范措施：\n1. 使用参数化查询/预编译语句（PreparedStatement），不直接拼接 SQL 字符串；\n2. 对用户输入进行严格校验和转义，使用最小权限的数据库账号；\n3. 使用 ORM 框架并避免原生 SQL 拼接；\n4. 部署 WAF、开启数据库错误信息屏蔽、定期安全审计。",
+      "analysis": "评分要点：①正确解释 SQL 注入原理；②说出数据泄露/篡改/删库等危害；③列出参数化查询、输入校验、最小权限、ORM 等措施中的至少三种。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机基础",
+      "chapter": "第二章 网络与操作系统",
+      "question": "请描述从在浏览器地址栏输入网址到页面展示，中间发生了哪些主要过程？",
+      "answer": "主要过程：\n1. URL 解析：浏览器解析协议、域名、端口和路径；\n2. DNS 解析：将域名解析为服务器 IP 地址（涉及浏览器缓存、系统缓存、DNS 服务器递归查询）；\n3. 建立连接：与服务器进行 TCP 三次握手，HTTPS 还需 TLS 握手协商加密；\n4. 发送请求：浏览器发送 HTTP 请求（请求行、请求头、请求体）；\n5. 服务器处理并返回响应：服务器处理业务逻辑，返回状态码和响应内容（HTML 等）；\n6. 浏览器渲染：解析 HTML 构建 DOM 树，解析 CSS 构建 CSSOM，合并为渲染树，进行布局（Layout）和绘制（Paint）；\n7. 加载子资源：继续请求页面引用的 JS、图片、CSS 等，JS 执行可能修改 DOM，最终呈现完整页面；\n8. 连接结束：可保持长连接复用，或四次挥手断开 TCP。",
+      "analysis": "评分要点：答出 DNS 解析、TCP 连接（HTTPS 含 TLS）、HTTP 请求与响应、浏览器渲染（DOM/CSSOM/布局/绘制）这几个核心阶段即可得大部分分数，能补充缓存、三次握手等细节更佳。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机基础",
+      "chapter": "第三章 数据库与数据结构",
+      "question": "下列时间复杂度中，效率最高（增长最慢）的是？",
+      "options": [
+        "A. O(n²)",
+        "B. O(n log n)",
+        "C. O(log n)",
+        "D. O(n)"
+      ],
+      "answer": "C",
+      "analysis": "增长速度：O(log n) < O(n) < O(n log n) < O(n²)，故 O(log n) 效率最高，典型代表是二分查找。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机基础",
+      "chapter": "第三章 数据库与数据结构",
+      "question": "下列哪些是关系型数据库？（多选）",
+      "options": [
+        "A. MySQL",
+        "B. MongoDB",
+        "C. Oracle",
+        "D. PostgreSQL"
+      ],
+      "answer": [
+        "A",
+        "C",
+        "D"
+      ],
+      "analysis": "MySQL、Oracle、PostgreSQL 是关系型数据库。MongoDB 是非关系型（NoSQL）数据库。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机基础",
+      "chapter": "第三章 数据库与数据结构",
+      "question": "以下哪些属于数据结构？（多选）",
+      "options": [
+        "A. 数组",
+        "B. 链表",
+        "C. 栈",
+        "D. 编译器"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C"
+      ],
+      "analysis": "数组、链表、栈都是常见的数据结构。编译器是一种系统软件，不属于数据结构。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机基础",
+      "chapter": "第三章 数据库与数据结构",
+      "question": "请说明数据库索引的作用，以及使用索引可能带来的代价。",
+      "answer": "作用：索引通过额外的数据结构（如 B+ 树）加快数据查询速度，减少全表扫描，提升 WHERE 条件过滤、排序和连接的性能。\n代价：①索引会占用额外的存储空间；②插入、更新、删除数据时需要同步维护索引，增加写操作开销；③过多索引会影响数据库优化器的选择并增加管理成本。",
+      "analysis": "从收益（查询加速）和代价（空间占用、写入变慢、维护成本）两方面作答即可。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机基础",
+      "chapter": "第三章 数据库与数据结构",
+      "question": "请解释什么是「事务」，并说明数据库事务的 ACID 四大特性。",
+      "answer": "事务是数据库中由一组操作组成的、不可分割的逻辑执行单元，这些操作要么全部成功提交，要么全部失败回滚。\n\nACID 四大特性：\n1. 原子性（Atomicity）：事务中的操作是一个整体，全部执行或全部不执行，中途失败会回滚到事务开始前的状态；\n2. 一致性（Consistency）：事务执行前后，数据库从一个合法状态转移到另一个合法状态，满足完整性约束；\n3. 隔离性（Isolation）：并发执行的多个事务互不干扰，通过隔离级别控制（如读未提交、读已提交、可重复读、串行化）；\n4. 持久性（Durability）：事务一旦提交，其结果永久保存，即使系统宕机也不会丢失（依赖日志和落盘机制）。",
+      "analysis": "评分要点：①说明事务「全做或全不做」的原子语义；②准确解释 A/C/I/D 四个特性，能举出转账、回滚、隔离级别等例子更佳。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "世界上公认的第一台电子数字计算机 ENIAC 诞生于哪一年？",
+      "options": [
+        "A. 1942年",
+        "B. 1946年",
+        "C. 1950年",
+        "D. 1960年"
+      ],
+      "answer": "B",
+      "analysis": "ENIAC（埃尼阿克）于1946年在美国宾夕法尼亚大学诞生，是世界上第一台通用电子数字计算机。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "在计算机中，数据的最小单位是？",
+      "options": [
+        "A. 字节（Byte）",
+        "B. 位（bit）",
+        "C. 字（Word）",
+        "D. 千字节（KB）"
+      ],
+      "answer": "B",
+      "analysis": "位（bit）是计算机中数据的最小单位，只能表示0或1；字节（Byte）是基本存储单位，1字节=8位。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "1个字节（Byte）等于多少个二进制位（bit）？",
+      "options": [
+        "A. 4位",
+        "B. 8位",
+        "C. 16位",
+        "D. 32位"
+      ],
+      "answer": "B",
+      "analysis": "1 Byte = 8 bit。一个字节能表示2^8=256种不同状态。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "计算机能够直接识别和执行的语言是？",
+      "options": [
+        "A. 机器语言",
+        "B. 汇编语言",
+        "C. 高级语言",
+        "D. C语言"
+      ],
+      "answer": "A",
+      "analysis": "机器语言是由二进制代码组成的、计算机能直接执行的语言；汇编语言和高级语言都需要翻译后才能执行。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "关于只读存储器 ROM 的特点，下列说法正确的是？",
+      "options": [
+        "A. 可读可写，断电后数据丢失",
+        "B. 只能读出不能写入，断电后数据不丢失",
+        "C. 只能写入不能读出",
+        "D. 可读可写，断电后数据不丢失"
+      ],
+      "answer": "B",
+      "analysis": "ROM（只读存储器）中的信息在制造时写入，只能读出、不能随意改写，断电后数据不会丢失；而RAM断电后信息会丢失。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "下列设备中，属于计算机输入设备的有？",
+      "options": [
+        "A. 键盘",
+        "B. 鼠标",
+        "C. 显示器",
+        "D. 扫描仪"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "D"
+      ],
+      "analysis": "键盘、鼠标、扫描仪用于向计算机输入信息，属于输入设备；显示器用于输出显示，属于输出设备。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "计算机硬件系统由冯·诺依曼结构的哪些基本部件组成？",
+      "options": [
+        "A. 运算器",
+        "B. 控制器",
+        "C. 存储器",
+        "D. 输入设备和输出设备"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "analysis": "冯·诺依曼结构将计算机硬件分为运算器、控制器、存储器、输入设备和输出设备五大部分（运算器和控制器合称为CPU）。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "计算机病毒本质上是一段能够自我复制、具有破坏性的计算机程序。",
+      "answer": "正确",
+      "analysis": "计算机病毒是人为编制的、具有自我复制和传播能力、会破坏系统或数据的程序代码。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "随机存储器 RAM 中的数据在断电后不会丢失。",
+      "answer": "错误",
+      "analysis": "RAM是易失性存储器，断电后其中的数据会全部丢失；断电不丢失数据的是ROM。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机应用基础",
+      "chapter": "第一章 计算机基础知识",
+      "question": "请简述计算机的主要应用领域（至少列举四个方面）。",
+      "answer": "计算机主要应用于：①科学计算（如航天、气象、工程计算）；②数据处理/信息管理（如办公自动化、数据库、财务系统）；③过程控制/自动控制（如工业自动化、生产控制）；④计算机辅助系统（CAD辅助设计、CAM辅助制造、CAI辅助教学）；⑤人工智能（语音图像识别、专家系统）；⑥网络与通信、多媒体应用、电子商务等。",
+      "analysis": "从科学计算、信息管理、自动控制、辅助系统、人工智能、网络通信等角度作答，举出四个以上领域并举例即可。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "在 Windows 中，在多个打开的应用程序窗口之间快速切换的快捷键是？",
+      "options": [
+        "A. Ctrl+Tab",
+        "B. Alt+Tab",
+        "C. Shift+Tab",
+        "D. Win+D"
+      ],
+      "answer": "B",
+      "analysis": "Alt+Tab用于在已打开的窗口/程序之间切换；Win+D用于显示/最小化所有窗口回到桌面。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "在 Windows 中，不经过回收站、直接永久删除文件的快捷键是？",
+      "options": [
+        "A. Delete",
+        "B. Ctrl+Delete",
+        "C. Shift+Delete",
+        "D. Alt+F4"
+      ],
+      "answer": "C",
+      "analysis": "按Delete是放入回收站（可还原）；按Shift+Delete则直接永久删除，不进入回收站，无法轻易恢复。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "在 Windows 应用程序中，“复制”操作的快捷键是？",
+      "options": [
+        "A. Ctrl+X",
+        "B. Ctrl+C",
+        "C. Ctrl+V",
+        "D. Ctrl+Z"
+      ],
+      "answer": "B",
+      "analysis": "Ctrl+C复制，Ctrl+X剪切，Ctrl+V粘贴，Ctrl+Z撤销。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "文件扩展名 .txt 表示的文件类型是？",
+      "options": [
+        "A. 可执行文件",
+        "B. 纯文本文件",
+        "C. 图片文件",
+        "D. 压缩文件"
+      ],
+      "answer": "B",
+      "analysis": ".txt是纯文本文件；.exe/.com为可执行文件；.jpg/.png为图片文件；.zip/.rar为压缩文件。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "利用 Windows 任务栏不能完成的操作是？",
+      "options": [
+        "A. 切换打开的窗口",
+        "B. 打开“开始”菜单",
+        "C. 查看和设置系统时间",
+        "D. 修改某个文件的具体内容"
+      ],
+      "answer": "D",
+      "analysis": "任务栏可切换窗口、打开开始菜单、显示时间等；修改文件内容需要打开对应的应用程序，任务栏无法完成。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "下列软件中，属于操作系统的有？",
+      "options": [
+        "A. Windows",
+        "B. Linux",
+        "C. macOS",
+        "D. Word"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C"
+      ],
+      "analysis": "Windows、Linux、macOS都是操作系统；Word是应用软件（文字处理程序）。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "在 Windows 中，可以用来关闭当前活动窗口的方法有？",
+      "options": [
+        "A. 按快捷键 Alt+F4",
+        "B. 单击窗口右上角的“关闭”按钮",
+        "C. 双击窗口标题栏",
+        "D. 按快捷键 Ctrl+S"
+      ],
+      "answer": [
+        "A",
+        "B"
+      ],
+      "analysis": "Alt+F4和单击关闭按钮可关闭窗口；双击标题栏是最大化/还原窗口；Ctrl+S是保存文件。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "在同一个文件夹中，可以同时存在两个文件名（含扩展名）完全相同的文件。",
+      "answer": "错误",
+      "analysis": "同一文件夹中不允许有两个完全同名的文件，否则系统会提示重名冲突；不同文件夹中才可以同名。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "被删除到回收站中的文件或文件夹，可以通过“还原”恢复到原来的位置。",
+      "answer": "正确",
+      "analysis": "回收站中的文件仍占用磁盘空间，右键选择“还原”即可恢复到删除前的位置；清空回收站后才真正删除。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机应用基础",
+      "chapter": "第二章 Windows操作系统",
+      "question": "请简述在 Windows 中将一个文件从 U 盘复制到 D 盘某文件夹的操作步骤。",
+      "answer": "方法一：①打开U盘中该文件所在文件夹，选中文件；②按Ctrl+C（或右键“复制”）；③打开D盘目标文件夹；④按Ctrl+V（或右键“粘贴”）。方法二：选中文件后按Ctrl+C，再到目标位置按Ctrl+V；也可以用鼠标右键拖动后选择“复制到当前位置”。注意：复制后原文件仍保留在U盘中。",
+      "analysis": "要点：选中源文件→复制→打开目标位置→粘贴；强调复制与剪切的区别（复制保留原文件）。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "Internet（因特网）上计算机之间通信所使用的基本协议是？",
+      "options": [
+        "A. IPX/SPX",
+        "B. NetBEUI",
+        "C. TCP/IP",
+        "D. AppleTalk"
+      ],
+      "answer": "C",
+      "analysis": "TCP/IP协议是Internet的基础协议，TCP负责数据传输的可靠性，IP负责寻址和路由。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "HTTP 指的是？",
+      "options": [
+        "A. 一种网址",
+        "B. 超文本传输协议",
+        "C. 一种编程语言",
+        "D. 电子邮件发送协议"
+      ],
+      "answer": "B",
+      "analysis": "HTTP（HyperText Transfer Protocol）是超文本传输协议，用于浏览器与Web服务器之间传输网页；其安全版本是HTTPS。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "下列选项中，合法的 IPv4 地址是？",
+      "options": [
+        "A. 256.168.1.1",
+        "B. 192.168.1.1",
+        "C. 1.2.3",
+        "D. www.example.com"
+      ],
+      "answer": "B",
+      "analysis": "IPv4地址由4个0~255之间的十进制数组成，用点分隔。A中256超过范围，C只有3段，D是域名不是IP地址。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "顶级域名 .cn 表示的是？",
+      "options": [
+        "A. 商业机构",
+        "B. 教育机构",
+        "C. 中国",
+        "D. 政府部门"
+      ],
+      "answer": "C",
+      "analysis": ".cn是中国的国家顶级域名；.com商业机构、.edu教育机构、.gov政府部门。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "在电子邮箱地址 user@example.com 中，“@”后面的部分表示？",
+      "options": [
+        "A. 用户名",
+        "B. 邮件服务器的域名",
+        "C. 登录密码",
+        "D. 端口号"
+      ],
+      "answer": "B",
+      "analysis": "邮箱格式为“用户名@邮件服务器域名”，@前是用户名，@后是提供邮件服务的服务器域名。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "下列软件中，属于网页浏览器的有？",
+      "options": [
+        "A. Internet Explorer（IE）",
+        "B. Chrome（谷歌浏览器）",
+        "C. Firefox（火狐浏览器）",
+        "D. Excel"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C"
+      ],
+      "analysis": "IE、Chrome、Firefox都是网页浏览器；Excel是电子表格处理软件。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "按网络覆盖的地理范围，计算机网络通常可分为？",
+      "options": [
+        "A. 局域网（LAN）",
+        "B. 城域网（MAN）",
+        "C. 广域网（WAN）",
+        "D. 以太网"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C"
+      ],
+      "analysis": "按覆盖范围分为局域网LAN、城域网MAN、广域网WAN；以太网是按技术/介质访问方式划分的一种局域网技术，不是按范围分类。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "一台计算机要接入 Internet，通常需要拥有一个 IP 地址。",
+      "answer": "正确",
+      "analysis": "IP地址是网络中主机的唯一标识，计算机通信时依靠IP地址进行寻址，因此上网需要IP地址（可由DHCP自动分配）。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "HTTPS 在传输过程中对数据进行了加密，因此比 HTTP 更安全。",
+      "answer": "正确",
+      "analysis": "HTTPS是HTTP与SSL/TLS的结合，对通信数据加密传输，能防止窃听和篡改，常用于网银、支付、登录等场景。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机应用基础",
+      "chapter": "第三章 计算机网络与Internet",
+      "question": "什么是 URL？请写出一个完整 URL 的一般组成。",
+      "answer": "URL（统一资源定位符）即网址，用于定位Internet上的资源。一般格式为：协议://主机名(域名或IP)[:端口号]/路径/文件名?查询参数。例如 https://www.example.com:443/news/index.html?id=1 中，https是协议，www.example.com是主机域名，443是端口（可省略），/news/index.html是资源路径，id=1是查询参数。",
+      "analysis": "要点：说明URL含义，并写出协议、主机域名、端口（可选）、路径、参数等组成部分，最好举例。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "Microsoft Word 2007及以上版本文档的默认扩展名是？",
+      "options": [
+        "A. .doc",
+        "B. .docx",
+        "C. .txt",
+        "D. .pdf"
+      ],
+      "answer": "B",
+      "analysis": "Word 2007以后默认保存为.docx（基于XML格式）；早期版本为.doc；.pdf是便携式文档格式。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "在 Excel 中，用于对一组数据求和的函数是？",
+      "options": [
+        "A. AVERAGE",
+        "B. SUM",
+        "C. MAX",
+        "D. COUNT"
+      ],
+      "answer": "B",
+      "analysis": "SUM求和；AVERAGE求平均值；MAX求最大值；COUNT统计数字个数。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "在 Excel 中，单元格地址 $A$1 属于哪种引用方式？",
+      "options": [
+        "A. 相对引用",
+        "B. 绝对引用",
+        "C. 混合引用",
+        "D. 错误引用"
+      ],
+      "answer": "B",
+      "analysis": "行列前都加$（$A$1）为绝对引用，复制公式时地址不变；A1为相对引用，$A1或A$1为混合引用。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "PowerPoint 软件主要用于？",
+      "options": [
+        "A. 文字处理",
+        "B. 数据计算",
+        "C. 制作和播放演示文稿",
+        "D. 图像处理"
+      ],
+      "answer": "C",
+      "analysis": "PowerPoint是演示文稿制作软件，用于制作幻灯片、进行汇报演示；Word用于文字处理，Excel用于数据计算。"
+    },
+    {
+      "type": "single",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "在 Word 中，使选中文字加粗显示的快捷键是？",
+      "options": [
+        "A. Ctrl+U（下划线）",
+        "B. Ctrl+B（加粗）",
+        "C. Ctrl+I（斜体）",
+        "D. Ctrl+E（居中）"
+      ],
+      "answer": "B",
+      "analysis": "Ctrl+B加粗（Bold），Ctrl+I斜体（Italic），Ctrl+U下划线（Underline），Ctrl+E居中对齐。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "下列属于 Microsoft Office 办公套件组件的有？",
+      "options": [
+        "A. Word（文字处理）",
+        "B. Excel（电子表格）",
+        "C. PowerPoint（演示文稿）",
+        "D. Photoshop（图像处理）"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C"
+      ],
+      "analysis": "Word、Excel、PowerPoint是Office三大组件；Photoshop是Adobe公司的专业图像处理软件，不属于Office。"
+    },
+    {
+      "type": "multiple",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "关于 Excel，下列说法正确的有？",
+      "options": [
+        "A. 可以根据数据插入图表",
+        "B. 可以使用函数和公式进行计算",
+        "C. 一个工作簿可以包含多个工作表",
+        "D. 单元格中只能输入数字，不能输入文字"
+      ],
+      "answer": [
+        "A",
+        "B",
+        "C"
+      ],
+      "analysis": "Excel支持图表、函数计算、多工作表；单元格中既可以输入数字，也可以输入文字、日期等，故D错误。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "在 Word 中，撤销上一步操作的快捷键是 Ctrl+Z。",
+      "answer": "正确",
+      "analysis": "Ctrl+Z为撤销，Ctrl+Y为恢复（重做），这在大多数Office软件中通用。"
+    },
+    {
+      "type": "judge",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "在 Excel 的单元格中只能输入数字，不能输入汉字或字母。",
+      "answer": "错误",
+      "analysis": "Excel单元格可以输入数字、文字、字母、日期、公式等多种内容，并非只能输入数字。"
+    },
+    {
+      "type": "essay",
+      "subject": "计算机应用基础",
+      "chapter": "第四章 办公软件",
+      "question": "请简述在 Excel 中使用 SUM 函数求 A1 到 A10 单元格数据总和的操作方法。",
+      "answer": "方法：①选中要存放结果的单元格（如A11）；②输入公式 =SUM(A1:A10) ；③按回车键确认，即可得到A1到A10的总和。也可以点击“开始”选项卡中的“自动求和(Σ)”按钮，系统会自动选取区域，确认回车即可。其中A1:A10表示从A1到A10的连续区域。",
+      "analysis": "要点：选中结果单元格→输入=SUM(区域)→回车；或使用自动求和按钮；说明区域引用A1:A10的含义。"
+    }
+  ]
+}

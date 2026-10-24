@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">题梦</string>
+    <string name="title_home">科目</string>
+    <string name="title_import">导入题库</string>
+    <string name="title_practice">练习</string>
+    <string name="title_chapters">章节</string>
+
+    <string name="btn_import">导入 JSON 题库</string>
+    <string name="btn_download_template">下载 JSON 模板</string>
+    <string name="btn_start_practice">开始练习</string>
+    <string name="btn_sequence_practice">顺序练习</string>
+    <string name="btn_random_practice">乱序练习</string>
+    <string name="btn_exam_mode">考试</string>
+    <string name="chapter_progress_format">共 %1$d 题 · 已做 %2$d 题</string>
+    <string name="dialog_pick_practice_mode_hint">请选择练习方式：</string>
+
+    <!-- 科目考试：章节多选 -->
+    <string name="title_select_exam_chapters">选择考试章节</string>
+    <string name="btn_pick_chapters_next">下一步</string>
+    <string name="msg_select_at_least_one_chapter">请至少选择一个章节</string>
+    <string name="exam_chapter_item_format">%1$s（%2$d 题）</string>
+    <string name="btn_delete">删除</string>
+    <string name="btn_submit">提交答案</string>
+    <string name="btn_next">下一题</string>
+    <string name="btn_prev">上一题</string>
+    <string name="btn_finish">结束练习</string>
+    <string name="btn_hand_in">交卷</string>
+    <string name="btn_view_score">查看成绩</string>
+    <string name="btn_retry">再练一次</string>
+    <string name="btn_back_home">返回首页</string>
+    <string name="btn_review_analysis">查看题目解析</string>
+
+    <string name="hint_select_file">请选择一个 JSON 题库文件</string>
+    <string name="hint_no_bank">暂无题库，请导入 JSON 题库</string>
+    <string name="hint_no_subject">暂无科目\n点击右下角 + 添加科目，或通过右上角菜单导入题库</string>
+    <string name="hint_no_chapter">该科目下暂无章节\n点击右下角 + 添加章节（如「第一章」「数据库」）</string>
+    <string name="hint_no_questions">该章节暂无题目，请先导入</string>
+
+    <string name="title_add_subject">添加科目</string>
+    <string name="title_add_chapter">添加章节</string>
+    <string name="hint_input_subject">请输入科目名称，如：计算机基础</string>
+    <string name="hint_input_chapter">请输入章节名称，如：第一章、数据库</string>
+    <string name="msg_name_empty">名称不能为空</string>
+    <string name="msg_subject_exists">科目已存在</string>
+    <string name="msg_chapter_exists">该章节已存在</string>
+    <string name="msg_add_failed">添加失败：%s</string>
+    <string name="msg_delete_subject_confirm">删除科目将同时删除其下所有章节和题目，确定删除吗？</string>
+    <string name="msg_delete_chapter_confirm">删除章节将同时删除该章节下所有题目，确定删除吗？</string>
+    <string name="label_chapters">章节</string>
+
+    <string name="msg_import_success">导入成功，共 %d 道题</string>
+    <string name="msg_import_failed">导入失败：%s</string>
+    <string name="msg_delete_confirm">确定删除该题库及其所有题目吗？</string>
+    <string name="msg_answer_correct">回答正确</string>
+    <string name="msg_answer_wrong">回答错误</string>
+    <string name="msg_practice_result">练习完成！正确率：%.0f%%（%d/%d）</string>
+    <string name="msg_exam_result">考试完成！正确率：%.0f%%（%d/%d）</string>
+    <string name="msg_finish_unrated_tip">还有 %d 道解答题未自评，可点击「查看题目解析」对照参考答案自评，未自评将记为错误</string>
+    <string name="msg_please_answer">请先作答</string>
+
+    <string name="label_score">得分</string>
+    <string name="label_analysis">解析</string>
+    <string name="label_correct_answer">正确答案</string>
+    <string name="label_reference_answer">参考答案</string>
+    <string name="label_your_answer">你的答案</string>
+    <string name="label_your_solution">你的解答</string>
+
+    <string name="type_single">单选题</string>
+    <string name="type_multiple">多选题</string>
+    <string name="type_judge">判断题</string>
+    <string name="type_essay">解答题</string>
+
+    <string name="exam_title_suffix">（考试模式）</string>
+    <string name="dialog_hand_in_title">交卷确认</string>
+    <string name="dialog_hand_in_message">确定交卷吗？交卷后将不能修改答案，未作答的题目记为错误，之后可查看每题答案与解析。</string>
+    <string name="dialog_hand_in_confirm">确认交卷</string>
+    <string name="dialog_end_exam_title">结束考试</string>
+    <string name="dialog_end_exam_message">确定要结束本次考试吗？结束后将自动交卷，不能再修改答案，之后可查看每题答案与解析。</string>
+    <string name="dialog_end_exam_confirm">结束考试</string>
+    <string name="dialog_end_exam_cancel">继续考试</string>
+    <string name="exam_progress_format">第 %1$d / %2$d 题 · 已答 %3$d 题</string>
+    <string name="msg_unrated_tip">还有 %d 道解答题未自评，查看成绩后记为错误</string>
+
+    <string name="hint_essay_input">请在此输入你的解答，完成后点击「提交答案」对照参考答案自评…</string>
+    <string name="btn_self_correct">我答对了</string>
+    <string name="btn_self_wrong">我答错了</string>
+    <string name="msg_self_rate_tip">解答题需对照参考答案进行自评</string>
+    <string name="msg_template_saved">模板已保存，可按模板格式编辑后导入</string>
+    <string name="msg_template_failed">模板保存失败：%s</string>
+
+    <!-- 题目管理 -->
+    <string name="menu_manage_questions">管理题目</string>
+    <string name="title_question_manage">题目管理</string>
+    <string name="title_edit_question">编辑题目</string>
+    <string name="hint_no_questions_in_subject">该科目暂无题目，请先导入</string>
+    <string name="btn_select_all">全选</string>
+    <string name="btn_cancel_select">取消</string>
+    <string name="btn_delete_selected">删除所选</string>
+    <string name="selection_title_format">已选择 %d 题</string>
+    <string name="msg_delete_questions_confirm">确定删除选中的 %d 道题吗？删除后不可恢复。</string>
+    <string name="msg_delete_question_single">确定删除这道题吗？删除后不可恢复。</string>
+    <string name="msg_deleted">已删除 %d 道题</string>
+    <string name="msg_select_empty">请先选择要删除的题目</string>
+    <string name="msg_update_success">已保存修改</string>
+
+    <!-- 编辑题目 -->
+    <string name="label_q_chapter">所属章节</string>
+    <string name="label_q_type">题型</string>
+    <string name="label_q_question">题目内容</string>
+    <string name="label_q_options">选项（勾选前面的框 = 正确答案）</string>
+    <string name="label_q_essay_answer">参考答案</string>
+    <string name="label_q_analysis">解析（可选）</string>
+    <string name="btn_add_option">＋ 添加选项</string>
+    <string name="btn_save_question">保存修改</string>
+    <string name="hint_option_text">请输入选项内容（建议以 A. B. C. 开头）</string>
+    <string name="hint_question_text">请输入题目内容</string>
+    <string name="hint_analysis_text">请输入解析（可选）</string>
+    <string name="hint_essay_reference">请输入参考答案</string>
+    <string name="msg_question_empty">题目内容不能为空</string>
+    <string name="msg_option_empty">选项内容不能为空</string>
+    <string name="msg_need_two_options">至少需要两个选项</string>
+    <string name="msg_single_one_answer">单选题必须且只能勾选一个正确答案</string>
+    <string name="msg_multi_one_answer">多选题至少勾选一个正确答案</string>
+    <string name="msg_judge_one_answer">判断题必须勾选一个正确答案</string>
+    <string name="msg_essay_answer_empty">参考答案不能为空</string>
+    <string name="hint_long_press_select">长按题目可进入批量选择模式</string>
+
+    <!-- 错题本 -->
+    <string name="menu_wrong_book">错题本</string>
+    <string name="title_wrong_book">错题本</string>
+    <string name="title_wrong_practice">错题练习</string>
+    <string name="btn_start_wrong_practice">开始错题练习</string>
+    <string name="btn_start_wrong_format">开始错题练习（%d 题）</string>
+    <string name="hint_no_wrong_questions">太棒了，该科目暂无错题！\n做题时答错的题目会自动收进错题本</string>
+    <string name="label_last_wrong_answer">上次错误：%s</string>
+
+    <!-- 导出备份 -->
+    <string name="title_import_export">导入导出</string>
+    <string name="section_import">导入题库</string>
+    <string name="section_export">导出备份</string>
+    <string name="menu_export_all">导出全部题目</string>
+    <string name="msg_export_success">已导出 %d 道题（含科目/章节），重装后可直接导入</string>
+    <string name="msg_export_failed">导出失败：%s</string>
+    <string name="msg_export_empty">暂无题目可导出</string>
+
+    <!-- 题目有效/筛选 -->
+    <string name="label_q_valid">有效（无效题目不参与练习/考试）</string>
+    <string name="tag_invalid">无效</string>
+    <string name="filter_all_chapters">全部章节</string>
+    <string name="filter_all_status">全部状态</string>
+    <string name="filter_valid_only">仅有效</string>
+    <string name="filter_invalid_only">仅无效</string>
+    <string name="hint_search_wrong">搜索题目/答案/解析</string>
+    <string name="hint_wrong_no_filter_result">没有符合条件的错题，\n换个章节或关键词试试</string>
+
+    <!-- 我的页面 -->
+    <string name="title_my">我的</string>
+    <string name="btn_add_subject">添加科目</string>
+    <string name="desc_wrong_book">查看各科目错题记录，重做错题</string>
+    <string name="desc_question_manage">查看、编辑、删除已导入的题目</string>
+    <string name="desc_import">从 JSON 文件导入题库，支持自动创建科目/章节</string>
+    <string name="desc_export">导出全部科目题目为备份 JSON，重装后可直接导入</string>
+    <string name="desc_import_export">导入 JSON 题库、下载模板，或导出全部题目备份</string>
+
+    <!-- 科目考试 -->
+    <string name="menu_subject_exam">科目考试</string>
+    <string name="dialog_exam_setting_hint">设置各题型考试数量（超出题库数量时取全部）</string>
+    <string name="label_exam_duration">考试时长</string>
+    <string name="duration_no_limit">不限时</string>
+    <string name="duration_30min">30 分钟</string>
+    <string name="duration_60min">1 小时</string>
+    <string name="duration_90min">1.5 小时</string>
+    <string name="duration_120min">2 小时</string>
+    <string name="duration_180min">3 小时</string>
+    <string name="duration_custom">自定义…</string>
+    <string name="title_custom_duration">自定义考试时长</string>
+    <string name="hint_custom_duration">请输入分钟数</string>
+    <string name="msg_invalid_duration">请输入有效的分钟数（1-9999）</string>
+    <string name="label_custom_duration_value">自定义考试时长：%1$d 分钟</string>
+    <string name="msg_time_up_title">考试时间到</string>
+    <string name="msg_time_up_message">考试时间已到，系统将自动交卷，未作答的题目记为错误。是否确认交卷？</string>
+    <string name="countdown_format">剩余 %1$02d:%2$02d</string>
+    <string name="label_paused">已暂停</string>
+    <!-- 暂存考试 -->
+    <string name="msg_save_draft_title">暂存考试</string>
+    <string name="msg_save_draft_message">暂存后可退出，下次进入本科目考试时选择「恢复原有考试」即可继续。是否暂存？</string>
+    <string name="dialog_save_draft_confirm">暂存并退出</string>
+    <string name="msg_draft_saved">考试已暂存</string>
+    <string name="msg_save_draft_failed">暂存失败</string>
+    <!-- 恢复暂存考试 -->
+    <string name="msg_draft_resume_title">恢复暂存考试</string>
+    <string name="msg_draft_resume_message">检测到「%1$s」有一场未完成的考试（共 %2$d 题，已作答 %3$d 题）。</string>
+    <string name="msg_draft_resume_duration">考试时长 %1$d 分钟。</string>
+    <string name="action_resume_draft">恢复原有考试</string>
+    <string name="action_new_exam">新开考试</string>
+    <string name="msg_exam_count_zero">请至少设置一道题目</string>
+
+    <!-- 考试历史 -->
+    <string name="title_exam_history">考试管理</string>
+    <string name="desc_exam_history">管理历次考试的试卷、作答与成绩，支持批量删除与恢复</string>
+    <string name="title_exam_detail">考试详情</string>
+    <string name="hint_no_exam_history">暂无考试记录\n完成一场考试（交卷并查看成绩）后会自动保存在这里</string>
+    <string name="menu_clear_history">清空记录</string>
+    <string name="menu_cleared_history">已清空历史</string>
+    <string name="title_cleared_history">已清空的历史</string>
+    <string name="hint_no_cleared_history">暂无已清空的考试记录\n在考试管理中删除或清空的记录会保留在这里</string>
+    <string name="msg_clear_history_confirm">确定清空全部考试历史吗？</string>
+    <string name="msg_delete_history_confirm">确定删除这条考试记录吗？</string>
+    <string name="msg_delete_exams_confirm">确定删除选中的 %d 条考试记录吗？</string>
+    <string name="msg_exams_deleted">已删除 %d 条考试记录</string>
+    <string name="selection_title_exams_format">已选择 %d 条记录</string>
+    <string name="exam_score_format">答对 %1$d / %2$d 题 · 正确率 %3$.0f%%</string>
+    <string name="msg_history_cleared">已清空考试历史</string>
+    <string name="msg_history_deleted">已删除该记录</string>
+    <string name="msg_restore_history_confirm">确定恢复这条考试记录吗？恢复后将重新显示在考试管理中。</string>
+    <string name="msg_history_restored">已恢复该记录</string>
+
+    <!-- 考试记录有效/无效标志 -->
+    <string name="menu_batch_manage">批量管理</string>
+    <string name="btn_mark_valid">设为有效</string>
+    <string name="btn_mark_invalid">设为无效</string>
+    <string name="btn_set_valid">设为有效</string>
+    <string name="btn_set_invalid">设为无效</string>
+    <string name="exam_state_invalid">无效</string>
+    <string name="msg_exam_set_valid">已设为有效</string>
+    <string name="msg_exam_set_invalid">已设为无效</string>
+    <string name="msg_exams_set_valid">已将 %d 条记录设为有效</string>
+    <string name="msg_exams_set_invalid">已将 %d 条记录设为无效</string>
+    <string name="msg_exam_mark_title">设置该记录状态</string>
+    <string name="msg_exams_delete_permanent_confirm">确定删除选中的 %d 条考试记录吗？\n将连同这些考试的作答明细一并永久删除，且不可恢复。</string>
+    <string name="msg_exams_deleted_permanent">已删除 %d 条考试记录</string>
+    <string name="msg_questions_set_valid">已将 %d 道题设为有效</string>
+    <string name="msg_questions_set_invalid">已将 %d 道题设为无效</string>
+
+
+    <!-- 导入题库：合并/清空选择 -->
+    <string name="import_pick_hint">请选择导入方式：</string>
+    <string name="import_merge_title">合并导入</string>
+    <string name="import_clear_title">清空后导入</string>
+    <string name="msg_import_choose_mode">导入文件共 %1$d 道题。</string>
+    <string name="import_merge_desc">保留本机现有数据，将文件中的题目追加到本机（可能产生重复内容）</string>
+    <string name="import_clear_desc">删除本机全部科目、章节、题目与考试记录，再完整写入导入文件中的题目</string>
+    <string name="msg_import_clear_confirm">本机现有 %1$d 道题。\n\n「清空后导入」将永久删除本机全部科目、章节、题目、错题记录与考试记录，且无法撤销；随后会把导入文件（%2$d 道题）完整写入本机。\n\n确定要清空本机数据并导入吗？</string>
+    <string name="action_confirm_clear_import">确认清空并导入</string>
+    <string name="msg_import_success_clear">导入完成！已清空本机数据，并导入 %1$d 道题</string>
+</resources>

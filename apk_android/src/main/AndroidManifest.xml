@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.IQuestion">
+
+        <activity
+            android:name=".MyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ImportExportActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SubjectActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".QuestionManageActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".EditQuestionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".WrongBookActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ExamHistoryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ClearedExamHistoryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ExamHistoryDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".PracticeActivity"
+            android:exported="false" />
+
+    </application>
+
+</manifest>

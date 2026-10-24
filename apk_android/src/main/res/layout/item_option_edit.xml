@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="4dp">
+
+    <!-- 勾选 = 正确答案 -->
+    <CheckBox
+        android:id="@+id/cbCorrect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="0dp"
+        android:paddingHorizontal="4dp" />
+
+    <EditText
+        android:id="@+id/etOptionText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@drawable/bg_essay_edit"
+        android:hint="@string/hint_option_text"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="10dp"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/btnRemoveOption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/btn_delete"
+        android:padding="10dp"
+        android:text="✕"
+        android:textColor="@color/wrong"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

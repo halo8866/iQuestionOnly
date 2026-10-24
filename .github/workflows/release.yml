@@ -1,0 +1,351 @@
+name: Release
+
+# 统一发布：APK 与 IPA 合并到同一个版本化 Release（tag v<BASE_VERSION>.N）
+# 默认仅手动触发（Actions → Release → Run workflow），避免开源仓库缺少签名 Secrets 时自动失败
+# 升级次版本（如 1.1 → 1.2）：只改下面 BASE_VERSION 一处即可，修订号自动从 0 重新计数
+env:
+  BASE_VERSION: "1.1"
+
+on:
+  workflow_dispatch:
+
+# 串行化，避免并发产生重复版本号
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # 创建/更新 Release 需要写权限
+
+jobs:
+  # ---- 1. 统一版本号（Android versionCode 与 iOS build 共用）----
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version_name: ${{ steps.ver.outputs.version_name }}
+      version_code: ${{ steps.ver.outputs.version_code }}
+      tag: v${{ steps.ver.outputs.version_name }}
+    steps:
+      - name: 计算版本号（当前 BASE_VERSION 线内修订号递增）
+        id: ver
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          BASE="$BASE_VERSION"
+          RESP=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases?per_page=100")
+          # 当前 BASE 线（如 1.1）已有 v1.1.N 中最大的 N；没有则从 0 开始（首个版本 1.1.0）
+          ESCAPED=${BASE//./\\.}
+          LAST=$(echo "$RESP" | grep -oP "\"tag_name\":\s*\"v${ESCAPED}\.\K[0-9]+" | sort -n | tail -1 || true)
+          PATCH=$(( ${LAST:--1} + 1 ))
+          VN="$BASE.$PATCH"
+          # versionCode / iOS build 必须全局单调递增（否则无法覆盖安装）：
+          # 用全部 v*.*.* 版本 Release 的数量递增，不随次版本切换回退
+          COUNT=$(echo "$RESP" | grep -oP '"tag_name":\s*"v[0-9]+\.[0-9]+\.[0-9]+"' | sort -u | wc -l)
+          VC=$(( COUNT + 2 ))
+          echo "version_name=$VN" >> "$GITHUB_OUTPUT"
+          echo "version_code=$VC" >> "$GITHUB_OUTPUT"
+          echo "本次发布: $VN (Android versionCode / iOS build=$VC)"
+
+  # ---- 2. 变更检测：哪一端代码发生了变化（手动触发视为双端都变）----
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      android: ${{ steps.set.outputs.android || steps.filter.outputs.android }}
+      ios: ${{ steps.set.outputs.ios || steps.filter.outputs.ios }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            android:
+              - 'apk_android/**'
+              - '.github/workflows/release.yml'
+            ios:
+              - 'ipa_ios/**'
+              - '.github/workflows/release.yml'
+      - id: set
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          echo "android=true" >> "$GITHUB_OUTPUT"
+          echo "ios=true" >> "$GITHUB_OUTPUT"
+
+  # ---- 3. 预先创建统一 Release（避免双端 job 并发创建竞争）----
+  prepare:
+    needs: [version, changes]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 创建 Release 与发布说明
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}   # prepare 无 checkout，需显式指定仓库
+          ANDROID_CHANGED: ${{ needs.changes.outputs.android }}
+          IOS_CHANGED: ${{ needs.changes.outputs.ios }}
+          IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
+          IOS_P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
+          IOS_PROFILE_BASE64: ${{ secrets.IOS_PROFILE_BASE64 }}
+        run: |
+          set -euo pipefail
+          VN="${{ needs.version.outputs.version_name }}"
+          VC="${{ needs.version.outputs.version_code }}"
+          if [ "$ANDROID_CHANGED" = true ]; then A_SRC="本次新构建"; else A_SRC="沿用上一版（本次无 Android 变更）"; fi
+          if [ "$IOS_CHANGED" = true ]; then I_SRC="本次新构建"; else I_SRC="沿用上一版（本次无 iOS 变更）"; fi
+          if [ -n "$IOS_P12_BASE64" ] && [ -n "$IOS_P12_PASSWORD" ] && [ -n "$IOS_PROFILE_BASE64" ]; then
+            I_SIGN="已签名，可直接安装到描述文件内设备"
+          else
+            I_SIGN="未签名，需用爱思助手/Sideloadly 等工具自签后安装"
+          fi
+          mkdir -p /tmp/rel
+          cat > /tmp/rel/notes.md <<EOF
+          ## 题梦 v$VN
+
+          - 版本号：$VN（Android versionCode / iOS build = $VC）
+          - 构建时间：$(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          - 提交：\`${GITHUB_SHA::7}\`
+          - 提交信息：${{ github.event.head_commit.message || '手动触发构建' }}
+
+          ### 安装包
+
+          | 平台 | 文件 | 说明 |
+          |---|---|---|
+          | Android | \`iQuestion-$VN.apk\` | $A_SRC；正式签名，可覆盖升级 |
+          | iOS | \`iQuestion-ios-$VN.ipa\` | $I_SRC；$I_SIGN |
+          EOF
+          gh release create "v$VN" --title "题梦 v$VN" --notes-file /tmp/rel/notes.md
+
+  # ---- 4. Android：有变更则构建，无变更则复用上一版 APK ----
+  android:
+    needs: [version, changes, prepare]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 配置 JDK 17
+        if: needs.changes.outputs.android == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: 配置 Android SDK
+        if: needs.changes.outputs.android == 'true'
+        shell: bash
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: 准备签名密钥
+        if: needs.changes.outputs.android == 'true'
+        working-directory: apk_android
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > iquestion-release.jks
+          cat > keystore.properties <<EOF
+          storeFile=iquestion-release.jks
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+
+      - name: 编译 Release APK
+        if: needs.changes.outputs.android == 'true'
+        working-directory: apk_android
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleRelease --no-daemon --stacktrace \
+            -PappVersionCode=${{ needs.version.outputs.version_code }} \
+            -PappVersionName=${{ needs.version.outputs.version_name }}
+
+      - name: 整理新 APK
+        if: needs.changes.outputs.android == 'true'
+        working-directory: apk_android
+        run: |
+          VN="${{ needs.version.outputs.version_name }}"
+          cp build/outputs/apk/release/iQuestion-release.apk "iQuestion-$VN.apk"
+          ls -lh "iQuestion-$VN.apk"
+
+      - name: 复用上一版 APK
+        if: needs.changes.outputs.android == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          VN="${{ needs.version.outputs.version_name }}"
+          PREV_TAG=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases?per_page=10" | \
+            grep -oP '"tag_name":\s*"\K[^"]+' | grep "^v[0-9]" | grep -v "^v$VN$" | head -1)
+          gh release download "$PREV_TAG" --pattern "iQuestion-*.apk" --dir /tmp/prev-apk
+          APK_FILE=$(ls /tmp/prev-apk/iQuestion-*.apk | head -1)
+          mkdir -p apk_android
+          cp "$APK_FILE" "apk_android/iQuestion-$VN.apk"
+          echo "已复用 $PREV_TAG 的 APK 作为本次 Android 资产"
+
+      - name: 上传 APK 到统一 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.version.outputs.tag }}
+          files: apk_android/iQuestion-${{ needs.version.outputs.version_name }}.apk
+          fail_on_unmatched_files: true
+
+  # ---- 5. iOS：有变更则构建，无变更则复用上一版 IPA ----
+  ios:
+    needs: [version, changes, prepare]
+    runs-on: macos-15
+    env:
+      # 签名三件套：全部配置则产出签名 IPA，任一缺失则回退未签名 IPA
+      IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
+      IOS_P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
+      IOS_PROFILE_BASE64: ${{ secrets.IOS_PROFILE_BASE64 }}
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 XcodeGen
+        if: needs.changes.outputs.ios == 'true'
+        run: brew install xcodegen
+
+      - name: 生成 Xcode 工程
+        if: needs.changes.outputs.ios == 'true'
+        working-directory: ipa_ios
+        run: xcodegen generate
+
+      - name: 准备签名证书与描述文件
+        if: >-
+          needs.changes.outputs.ios == 'true'
+          && env.IOS_P12_BASE64 != '' && env.IOS_P12_PASSWORD != ''
+          && env.IOS_PROFILE_BASE64 != ''
+        id: sign
+        run: |
+          set -euo pipefail
+          echo "$IOS_P12_BASE64" | base64 --decode > /tmp/cert.p12
+          echo "$IOS_PROFILE_BASE64" | base64 --decode > /tmp/profile.mobileprovision
+          security cms -D -i /tmp/profile.mobileprovision > /tmp/profile.plist
+
+          UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /tmp/profile.plist)
+          TEAM_ID=$(/usr/libexec/PlistBuddy -c 'Print :TeamIdentifier:0' /tmp/profile.plist)
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' /tmp/profile.plist)
+          # get-task-allow=true 为开发描述文件，否则为分发（Ad Hoc）
+          if /usr/libexec/PlistBuddy -c 'Print :Entitlements:get-task-allow' /tmp/profile.plist 2>/dev/null | grep -q true; then
+            METHOD="development"; IDENTITY="Apple Development"
+          else
+            METHOD="ad-hoc"; IDENTITY="Apple Distribution"
+          fi
+
+          KC_PASS="$(openssl rand -hex 16)"
+          security create-keychain -p "$KC_PASS" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KC_PASS" build.keychain
+          security set-keychain-settings -t 3600 build.keychain
+          security import /tmp/cert.p12 -k build.keychain -P "$IOS_P12_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple-signing: -s -k "$KC_PASS" build.keychain
+
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          cp /tmp/profile.mobileprovision "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+
+          cat > /tmp/ExportOptions.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key><string>$METHOD</string>
+            <key>teamID</key><string>$TEAM_ID</string>
+            <key>signingStyle</key><string>manual</string>
+            <key>stripSwiftSymbols</key><true/>
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>com.iquestion.app</key><string>$PROFILE_NAME</string>
+            </dict>
+          </dict>
+          </plist>
+          EOF
+          echo "team_id=$TEAM_ID" >> "$GITHUB_OUTPUT"
+          echo "identity=$IDENTITY" >> "$GITHUB_OUTPUT"
+          echo "profile_name=$PROFILE_NAME" >> "$GITHUB_OUTPUT"
+          echo "签名方式: $METHOD ($IDENTITY)"
+
+      - name: 编译并归档（签名）
+        if: >-
+          needs.changes.outputs.ios == 'true'
+          && env.IOS_P12_BASE64 != '' && env.IOS_P12_PASSWORD != ''
+          && env.IOS_PROFILE_BASE64 != ''
+        working-directory: ipa_ios
+        run: |
+          xcodebuild archive \
+            -project iQuestion.xcodeproj -scheme iQuestion \
+            -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$PWD/build/iQuestion.xcarchive" \
+            DEVELOPMENT_TEAM='${{ steps.sign.outputs.team_id }}' \
+            CODE_SIGN_IDENTITY='${{ steps.sign.outputs.identity }}' \
+            PROVISIONING_PROFILE_SPECIFIER='${{ steps.sign.outputs.profile_name }}' \
+            CODE_SIGN_STYLE=Manual \
+            MARKETING_VERSION='${{ needs.version.outputs.version_name }}' \
+            CURRENT_PROJECT_VERSION='${{ needs.version.outputs.version_code }}' \
+            | tail -40
+
+      - name: 导出签名 IPA
+        if: >-
+          needs.changes.outputs.ios == 'true'
+          && env.IOS_P12_BASE64 != '' && env.IOS_P12_PASSWORD != ''
+          && env.IOS_PROFILE_BASE64 != ''
+        working-directory: ipa_ios
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath "$PWD/build/iQuestion.xcarchive" \
+            -exportOptionsPlist /tmp/ExportOptions.plist \
+            -exportPath "$PWD/build/export" | tail -20
+          cp build/export/iQuestion.ipa "iQuestion-ios-${{ needs.version.outputs.version_name }}.ipa"
+          ls -lh "iQuestion-ios-${{ needs.version.outputs.version_name }}.ipa"
+
+      - name: 编译并打包（未签名回退）
+        if: >-
+          needs.changes.outputs.ios == 'true'
+          && (env.IOS_P12_BASE64 == '' || env.IOS_P12_PASSWORD == ''
+              || env.IOS_PROFILE_BASE64 == '')
+        working-directory: ipa_ios
+        run: |
+          xcodebuild archive \
+            -project iQuestion.xcodeproj -scheme iQuestion \
+            -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath "$PWD/build/iQuestion.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" \
+            MARKETING_VERSION='${{ needs.version.outputs.version_name }}' \
+            CURRENT_PROJECT_VERSION='${{ needs.version.outputs.version_code }}' \
+            | tail -40
+          mkdir -p build/Payload
+          cp -R build/iQuestion.xcarchive/Products/Applications/iQuestion.app build/Payload/
+          # 注意：zip 输出必须留在 build/ 内（写 ../ 会落到上级目录导致后续 cp 找不到文件）
+          (cd build && zip -qry iQuestion-unsigned.ipa Payload)
+          cp build/iQuestion-unsigned.ipa "iQuestion-ios-${{ needs.version.outputs.version_name }}.ipa"
+          echo "::warning::未配置 iOS 签名 Secrets，产出未签名 IPA，安装前需自行签名"
+          ls -lh "iQuestion-ios-${{ needs.version.outputs.version_name }}.ipa"
+
+      - name: 复用上一版 IPA
+        if: needs.changes.outputs.ios == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          VN="${{ needs.version.outputs.version_name }}"
+          PREV_TAG=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases?per_page=10" | \
+            grep -oP '"tag_name":\s*"\K[^"]+' | grep "^v[0-9]" | grep -v "^v$VN$" | head -1)
+          gh release download "$PREV_TAG" --pattern "iQuestion-ios-*.ipa" --dir /tmp/prev-ipa
+          IPA_FILE=$(ls /tmp/prev-ipa/iQuestion-ios-*.ipa | head -1)
+          mkdir -p ipa_ios
+          cp "$IPA_FILE" "ipa_ios/iQuestion-ios-$VN.ipa"
+          echo "已复用 $PREV_TAG 的 IPA 作为本次 iOS 资产"
+
+      - name: 上传 IPA 到统一 Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.version.outputs.tag }}
+          files: ipa_ios/iQuestion-ios-${{ needs.version.outputs.version_name }}.ipa
+          fail_on_unmatched_files: true
+
