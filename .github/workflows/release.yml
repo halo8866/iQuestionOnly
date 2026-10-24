@@ -49,7 +49,7 @@ jobs:
           VN="$BASE.$PATCH"
           # versionCode / iOS build 必须全局单调递增（否则无法覆盖安装）：
           # 用全部 v*.*.* 版本 Release 的数量递增，不随次版本切换回退
-          COUNT=$(echo "$RESP" | grep -oP '"tag_name":\s*"v[0-9]+\.[0-9]+\.[0-9]+"' | sort -u | wc -l)
+          COUNT=$(echo "$RESP" | grep -oP '"tag_name":\s*"v[0-9]+\.[0-9]+\.[0-9]+"' | sort -u | wc -l || true)
           VC=$(( COUNT + 2 ))
           echo "version_name=$VN" >> "$GITHUB_OUTPUT"
           echo "version_code=$VC" >> "$GITHUB_OUTPUT"
