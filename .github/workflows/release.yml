@@ -1,12 +1,19 @@
 name: Release
 
 # 统一发布：APK 与 IPA 合并到同一个版本化 Release（tag v<BASE_VERSION>.N）
-# 默认仅手动触发（Actions → Release → Run workflow），避免开源仓库缺少签名 Secrets 时自动失败
+# 推送到 main 且涉及 Android/iOS 代码时自动构建双端；也支持 Actions 手动触发
+# 未配置签名 Secrets 时自动回退：Android 产出 Debug APK，iOS 产出未签名 IPA
 # 升级次版本（如 1.1 → 1.2）：只改下面 BASE_VERSION 一处即可，修订号自动从 0 重新计数
 env:
   BASE_VERSION: "1.1"
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'apk_android/**'
+      - 'ipa_ios/**'
+      - '.github/workflows/release.yml'
   workflow_dispatch:
 
 # 串行化，避免并发产生重复版本号
@@ -48,28 +55,14 @@ jobs:
           echo "version_code=$VC" >> "$GITHUB_OUTPUT"
           echo "本次发布: $VN (Android versionCode / iOS build=$VC)"
 
-  # ---- 2. 变更检测：哪一端代码发生了变化（手动触发视为双端都变）----
+  # ---- 2. 每次触发都构建双端 ----
   changes:
     runs-on: ubuntu-latest
     outputs:
-      android: ${{ steps.set.outputs.android || steps.filter.outputs.android }}
-      ios: ${{ steps.set.outputs.ios || steps.filter.outputs.ios }}
+      android: ${{ steps.set.outputs.android }}
+      ios: ${{ steps.set.outputs.ios }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            android:
-              - 'apk_android/**'
-              - '.github/workflows/release.yml'
-            ios:
-              - 'ipa_ios/**'
-              - '.github/workflows/release.yml'
       - id: set
-        if: github.event_name == 'workflow_dispatch'
         run: |
           echo "android=true" >> "$GITHUB_OUTPUT"
           echo "ios=true" >> "$GITHUB_OUTPUT"
@@ -83,8 +76,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}   # prepare 无 checkout，需显式指定仓库
-          ANDROID_CHANGED: ${{ needs.changes.outputs.android }}
-          IOS_CHANGED: ${{ needs.changes.outputs.ios }}
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
           IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
           IOS_P12_PASSWORD: ${{ secrets.IOS_P12_PASSWORD }}
           IOS_PROFILE_BASE64: ${{ secrets.IOS_PROFILE_BASE64 }}
@@ -92,8 +84,13 @@ jobs:
           set -euo pipefail
           VN="${{ needs.version.outputs.version_name }}"
           VC="${{ needs.version.outputs.version_code }}"
-          if [ "$ANDROID_CHANGED" = true ]; then A_SRC="本次新构建"; else A_SRC="沿用上一版（本次无 Android 变更）"; fi
-          if [ "$IOS_CHANGED" = true ]; then I_SRC="本次新构建"; else I_SRC="沿用上一版（本次无 iOS 变更）"; fi
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            A_FILE="iQuestion-$VN.apk"
+            A_SIGN="正式签名，可覆盖升级"
+          else
+            A_FILE="iQuestion-$VN-debug.apk"
+            A_SIGN="未配置签名 Secrets，Debug 测试包"
+          fi
           if [ -n "$IOS_P12_BASE64" ] && [ -n "$IOS_P12_PASSWORD" ] && [ -n "$IOS_PROFILE_BASE64" ]; then
             I_SIGN="已签名，可直接安装到描述文件内设备"
           else
@@ -112,28 +109,28 @@ jobs:
 
           | 平台 | 文件 | 说明 |
           |---|---|---|
-          | Android | \`iQuestion-$VN.apk\` | $A_SRC；正式签名，可覆盖升级 |
-          | iOS | \`iQuestion-ios-$VN.ipa\` | $I_SRC；$I_SIGN |
+          | Android | \`$A_FILE\` | 本次新构建；$A_SIGN |
+          | iOS | \`iQuestion-ios-$VN.ipa\` | 本次新构建；$I_SIGN |
           EOF
           gh release create "v$VN" --title "题梦 v$VN" --notes-file /tmp/rel/notes.md
 
-  # ---- 4. Android：有变更则构建，无变更则复用上一版 APK ----
+  # ---- 4. Android：每次构建（有签名 Secrets 用 Release，无则回退 Debug）----
   android:
-    needs: [version, changes, prepare]
+    needs: [version, prepare]
     runs-on: ubuntu-latest
+    env:
+      KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
 
       - name: 配置 JDK 17
-        if: needs.changes.outputs.android == 'true'
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
       - name: 配置 Android SDK
-        if: needs.changes.outputs.android == 'true'
         shell: bash
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
@@ -141,10 +138,8 @@ jobs:
             "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
       - name: 准备签名密钥
-        if: needs.changes.outputs.android == 'true'
+        if: env.KEYSTORE_BASE64 != ''
         working-directory: apk_android
-        env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > iquestion-release.jks
           cat > keystore.properties <<EOF
@@ -154,47 +149,39 @@ jobs:
           keyPassword=${{ secrets.KEY_PASSWORD }}
           EOF
 
-      - name: 编译 Release APK
-        if: needs.changes.outputs.android == 'true'
+      - name: 编译签名 Release APK
+        if: env.KEYSTORE_BASE64 != ''
         working-directory: apk_android
         run: |
           chmod +x ./gradlew
           ./gradlew assembleRelease --no-daemon --stacktrace \
             -PappVersionCode=${{ needs.version.outputs.version_code }} \
             -PappVersionName=${{ needs.version.outputs.version_name }}
-
-      - name: 整理新 APK
-        if: needs.changes.outputs.android == 'true'
-        working-directory: apk_android
-        run: |
           VN="${{ needs.version.outputs.version_name }}"
-          cp build/outputs/apk/release/iQuestion-release.apk "iQuestion-$VN.apk"
+          cp build/outputs/apk/release/*.apk "iQuestion-$VN.apk"
           ls -lh "iQuestion-$VN.apk"
 
-      - name: 复用上一版 APK
-        if: needs.changes.outputs.android == 'false'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 编译 Debug APK（无签名 Secrets 回退）
+        if: env.KEYSTORE_BASE64 == ''
+        working-directory: apk_android
         run: |
-          set -euo pipefail
+          chmod +x ./gradlew
+          ./gradlew assembleDebug --no-daemon --stacktrace \
+            -PappVersionCode=${{ needs.version.outputs.version_code }} \
+            -PappVersionName=${{ needs.version.outputs.version_name }}
           VN="${{ needs.version.outputs.version_name }}"
-          PREV_TAG=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases?per_page=10" | \
-            grep -oP '"tag_name":\s*"\K[^"]+' | grep "^v[0-9]" | grep -v "^v$VN$" | head -1)
-          gh release download "$PREV_TAG" --pattern "iQuestion-*.apk" --dir /tmp/prev-apk
-          APK_FILE=$(ls /tmp/prev-apk/iQuestion-*.apk | head -1)
-          mkdir -p apk_android
-          cp "$APK_FILE" "apk_android/iQuestion-$VN.apk"
-          echo "已复用 $PREV_TAG 的 APK 作为本次 Android 资产"
+          cp build/outputs/apk/debug/*.apk "iQuestion-$VN-debug.apk"
+          echo "::warning::未配置 Android 签名 Secrets，产出 Debug APK，无法覆盖正式签名版本"
+          ls -lh "iQuestion-$VN-debug.apk"
 
       - name: 上传 APK 到统一 Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ needs.version.outputs.tag }}
-          files: apk_android/iQuestion-${{ needs.version.outputs.version_name }}.apk
+          files: apk_android/iQuestion-*.apk
           fail_on_unmatched_files: true
 
-  # ---- 5. iOS：有变更则构建，无变更则复用上一版 IPA ----
+  # ---- 5. iOS：每次构建（有签名 Secrets 用签名 IPA，无则未签名 IPA）----
   ios:
     needs: [version, changes, prepare]
     runs-on: macos-15
@@ -325,22 +312,6 @@ jobs:
           cp build/iQuestion-unsigned.ipa "iQuestion-ios-${{ needs.version.outputs.version_name }}.ipa"
           echo "::warning::未配置 iOS 签名 Secrets，产出未签名 IPA，安装前需自行签名"
           ls -lh "iQuestion-ios-${{ needs.version.outputs.version_name }}.ipa"
-
-      - name: 复用上一版 IPA
-        if: needs.changes.outputs.ios == 'false'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          VN="${{ needs.version.outputs.version_name }}"
-          PREV_TAG=$(curl -sS -H "Authorization: Bearer $GH_TOKEN" \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/releases?per_page=10" | \
-            grep -oP '"tag_name":\s*"\K[^"]+' | grep "^v[0-9]" | grep -v "^v$VN$" | head -1)
-          gh release download "$PREV_TAG" --pattern "iQuestion-ios-*.ipa" --dir /tmp/prev-ipa
-          IPA_FILE=$(ls /tmp/prev-ipa/iQuestion-ios-*.ipa | head -1)
-          mkdir -p ipa_ios
-          cp "$IPA_FILE" "ipa_ios/iQuestion-ios-$VN.ipa"
-          echo "已复用 $PREV_TAG 的 IPA 作为本次 iOS 资产"
 
       - name: 上传 IPA 到统一 Release
         uses: softprops/action-gh-release@v2

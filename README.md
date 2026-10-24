@@ -32,7 +32,7 @@ iQuestionOnly/
 │       └── Views/     # 各页面 SwiftUI 视图
 │
 ├── assets/            # 测试题库样例
-├── .github/workflows/ # 双端打包发布流水线（手动触发）
+├── .github/workflows/ # 双端打包发布流水线（推送自动构建）
 ├── LICENSE
 └── README.md
 ```
@@ -92,11 +92,15 @@ cd apk_android
 
 **请勿把 keystore、签名密码或 `keystore.properties` 提交到 Git。**
 
-## 自动发布（可选）
+## 自动构建与发布
 
-仓库内置 `.github/workflows/release.yml`，默认**仅手动触发**：在 GitHub 的 Actions 页面选择 `Release` → `Run workflow`，会构建 Android APK 与 iOS IPA 并创建版本化 Release。
+仓库内置 `.github/workflows/release.yml`，**每次推送到 `main` 分支且改动涉及 `apk_android/`、`ipa_ios/` 或该工作流本身时，自动构建 Android APK 与 iOS IPA**，并把两个安装包合并到同一个版本化 Release（tag 形如 `v1.1.0`，修订号自动递增）。仅修改文档等其它文件不会触发构建。
 
-如启用自动打包，需要在仓库 Secrets 中配置：
+也可以在 GitHub 的 Actions 页面选择 `Release` → `Run workflow` 手动触发一次完整构建。
+
+升级次版本时只需修改工作流顶部的 `BASE_VERSION`（例如 `1.1` → `1.2`），修订号会从 0 重新开始计数。
+
+如需正式签名，在仓库 Secrets 中配置：
 
 | Secret | 说明 |
 |---|---|
@@ -108,7 +112,10 @@ cd apk_android
 | `IOS_P12_PASSWORD` | 证书密码（可选） |
 | `IOS_PROFILE_BASE64` | iOS Provisioning Profile（可选） |
 
-未配置 iOS 签名相关 Secrets 时，流水线会产出未签名 IPA。
+回退行为：
+
+- 未配置 `KEYSTORE_BASE64` 时，Android 产出 **Debug APK**（`iQuestion-<版本>-debug.apk`，无法覆盖已签名的正式版本）。
+- 未配置完整 iOS 签名三件套时，产出 **未签名 IPA**，需自行签名后安装。
 
 ## 数据与隐私
 
